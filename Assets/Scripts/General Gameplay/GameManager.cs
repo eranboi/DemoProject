@@ -41,20 +41,16 @@ public class GameManager : MonoBehaviour
 
     //Subscribe to the events
     RaceController.isPlayerWon += RaceFinished;
+    PlayerMovementController.PlayerHitObstacles += RaceFinished;
     PlayerWallPaintController.WallPaintDoneCompletely += PaintingFinished;
 
-    Starting_UI.SetActive(true);
 
     gameStarted = false;
 
     StartCoroutine(CheckPlaceRank());
-
+    StartCoroutine(MakeStarterInteractable());
   }
 
-    // Update is called once per frame
-  void Update()
-  {
-  }
 
   
   void RaceFinished(bool didPlayerWin){
@@ -69,6 +65,8 @@ public class GameManager : MonoBehaviour
     }
 
     RaceController.isPlayerWon -= RaceFinished;
+    PlayerMovementController.PlayerHitObstacles -= RaceFinished;
+
 
   }
 
@@ -122,5 +120,10 @@ public class GameManager : MonoBehaviour
 
   }
 
-
+  IEnumerator MakeStarterInteractable(){
+    Starting_UI.SetActive(true);
+    yield return new WaitForSeconds(1);
+    Starting_UI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+    
+  }
 }

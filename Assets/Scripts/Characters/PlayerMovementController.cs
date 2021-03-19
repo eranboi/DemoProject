@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class PlayerMovementController : MonoBehaviour
 {
@@ -16,7 +15,8 @@ public class PlayerMovementController : MonoBehaviour
 
   public static PlayerMovementController Instance;
 
-  public GameObject cmRight, cmForward;
+  public static Action<bool> PlayerHitObstacles;
+
 
   void Start()
   {
@@ -138,6 +138,9 @@ public class PlayerMovementController : MonoBehaviour
     GameManager.PlayerLost -= PlayerLost;
   }
   
+  private void OnCollisionEnter(Collision collision){
+    if(collision.collider.CompareTag("Obstacle")) PlayerHitObstacles?.Invoke(false);
+  }
   public void SetStatus(bool activate){
     if(activate) currentStatus = STATUS.ACTIVATED;
     else currentStatus = STATUS.DISABLED;

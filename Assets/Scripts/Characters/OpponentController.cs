@@ -4,34 +4,35 @@ using UnityEngine.AI;
 
 public class OpponentController : MonoBehaviour
 {
-  // Start is called before the first frame update
   public NavMeshAgent agent;
   public Transform destinationPoint;
   private Vector3 startingPos, randomDestination;
-  private bool pathCalculated;
+  private bool  isAgentGetToFinalDestination, agentLost;
+  private Animator animator;
   [SerializeField] private GameObject P_girl;
 
-  private bool  isAgentGetToFinalDestination, agentLost;
-
   public Action AgentDestroyed;
+  
   void Awake(){
     destinationPoint = GameObject.Find("Objective").transform;
     if(destinationPoint)
-      //destinationPosition = new Vector3(transform.position.x, destinationPoint.position.y, destinationPoint.position.z);
-    startingPos = transform.position;
+      startingPos = transform.position;
+  
     P_girl = this.gameObject;
 
   }
+  
   void Start()
   {
-    if(GameManager.gameStarted)
-      FindRandomPathBetweenAgentAndFinalDestination();
-
+    animator = GetComponent<Animator>();
     GameManager.PlayerWon += AgentLost;
   }
 
   void Update()
   {
+    if(agent.velocity.magnitude > .5f && !animator.GetBool("moving")) animator.SetBool("moving", true);
+    else if(agent.velocity.magnitude <.5f && animator.GetBool("moving")) animator.SetBool("moving", false);
+
 
     if(agentLost || !GameManager.gameStarted){
       return;
