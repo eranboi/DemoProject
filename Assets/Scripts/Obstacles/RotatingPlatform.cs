@@ -5,14 +5,21 @@ using UnityEngine;
 public class RotatingPlatform : MonoBehaviour
 {
   [SerializeField] private float angularSpeed;
+  private Rigidbody rb;
+  Vector3 angularVelocity;
 
   void Start()
   {
-    //GetComponent<Rigidbody>().AddTorque(transform.forward * angularSpeed, ForceMode.Acceleration);
+    rb = GetComponent<Rigidbody>();
+    angularVelocity = new Vector3(0, 0, 5);
   }
 
   void FixedUpdate(){
-    transform.Rotate(Vector3.forward, angularSpeed * Time.deltaTime);
+    //transform.Rotate(Vector3.forward, angularSpeed * Time.deltaTime);
+
+    Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Time.fixedDeltaTime);
+    rb.MoveRotation(rb.rotation * deltaRotation);
+
   }
 
   void OnCollisionEnter(Collision collision){

@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
   
   public void SetPercentageUI(float percentage){
     
-    percentageImage_UI.rectTransform.sizeDelta = new Vector2(Mathf.Round(percentage) * 4, 100);
+    percentageImage_UI.rectTransform.sizeDelta = new Vector2(Mathf.Round(percentage) * 4, 50);
 
   }
 

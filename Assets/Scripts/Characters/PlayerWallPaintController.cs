@@ -26,7 +26,7 @@ public class PlayerWallPaintController : MonoBehaviour
   public static Action ObjectiveDone;
   public static Action WallPaintDoneCompletely;
 
-
+  private int m_width, m_height;
   void Start()
   {
    //Singleton
@@ -41,7 +41,8 @@ public class PlayerWallPaintController : MonoBehaviour
     //cam = Camera.main;
 
     paintedWallTexture = new Texture2D(288, 288, TextureFormat.RGB24, false);
-    
+    m_width = paintedWallTexture.width;
+    m_height = paintedWallTexture.height;
   }
 
   void Update()
@@ -99,24 +100,26 @@ public class PlayerWallPaintController : MonoBehaviour
 
   void CalculateThePercentage(){
 
-    int m_width = paintedWallTexture.width;
-    int m_height = paintedWallTexture.height;
+
 
     float totalAmountOfRedPixels = 0;
+    float totalAmountOfWhitePixels = 0;
 
     for (int i = 0; i < m_width + 1; i ++){
        for (int j = 0; j < m_height + 1; j ++){
         if(paintedWallTexture.GetPixel(i, j) == Color.red) totalAmountOfRedPixels++;
+        else if(paintedWallTexture.GetPixel(i, j) == Color.white) totalAmountOfWhitePixels++;
       }
     }
 
-    float percentage = (totalAmountOfRedPixels / (m_width * m_height)) * 100;
+    float percentage = (totalAmountOfRedPixels  / (totalAmountOfWhitePixels + totalAmountOfRedPixels)) * 100;
 
     GameManager.Instance.SetPercentageUI(percentage);
 
-    if(Mathf.Round(percentage) > 80){
-      ObjectiveDone?.Invoke();
-    }
+    Debug.Log(m_height * m_width);
+    Debug.Log("reds: "+totalAmountOfRedPixels);
+    Debug.Log("whites: " + totalAmountOfWhitePixels);
+
 
      if(Mathf.Round(percentage) > 99){
       WallPaintDoneCompletely?.Invoke();
